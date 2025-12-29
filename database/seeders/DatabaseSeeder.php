@@ -15,6 +15,14 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             CategorySeeder::class,
             SiteContentSeeder::class,
+            // Productos - 657 productos en total
+            ProductSeeder::class,
+            ProductSeederPart2::class,
+            ProductSeederPart3::class,
+            ProductSeederPart4::class,
+            ProductSeederFixes::class,
+            // Iconos de categorías
+            CategoryIconsCompleteSeeder::class,
         ]);
     }
 }
