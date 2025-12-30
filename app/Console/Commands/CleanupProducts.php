@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class CleanupProducts extends Command
 {
@@ -17,24 +18,45 @@ class CleanupProducts extends Command
         $categories = Category::all();
         $totalDeleted = 0;
 
-        $this->info("Cleaning up products, keeping {$limit} per category...");
+        $this->info("🧹 Cleaning up products, keeping {$limit} per category...");
 
         foreach ($categories as $category) {
-            $products = $category->products()->orderBy('id', 'desc')->get();
-            $toKeep = $products->take($limit)->pluck('id')->toArray();
+            // Obtener IDs de productos a mantener
+            $keepIds = Product::where('category_id', $category->id)
+                ->orderBy('id', 'asc')
+                ->limit($limit)
+                ->pluck('id')
+                ->toArray();
             
-            $deleted = Product::where('category_id', $category->id)
-                ->whereNotIn('id', $toKeep)
-                ->delete();
+            // Contar productos a eliminar
+            $toDeleteCount = Product::where('category_id', $category->id)
+                ->whereNotIn('id', $keepIds)
+                ->count();
             
-            $totalDeleted += $deleted;
-            
-            if ($deleted > 0) {
-                $this->line("  {$category->name}: {$deleted} deleted");
+            if ($toDeleteCount > 0) {
+                // Eliminar imágenes primero
+                DB::table('product_images')
+                    ->whereIn('product_id', function($query) use ($category, $keepIds) {
+                        $query->select('id')
+                            ->from('products')
+                            ->where('category_id', $category->id)
+                            ->whereNotIn('id', $keepIds);
+                    })
+                    ->delete();
+                
+                // Eliminar productos
+                $deleted = Product::where('category_id', $category->id)
+                    ->whereNotIn('id', $keepIds)
+                    ->delete();
+                
+                $totalDeleted += $deleted;
+                $this->line("  ✓ {$category->name}: {$deleted} deleted");
             }
         }
 
-        $this->info("Total products deleted: {$totalDeleted}");
+        $remaining = Product::count();
+        $this->info("✅ Total deleted: {$totalDeleted}");
+        $this->info("📊 Products remaining: {$remaining}");
         
         return Command::SUCCESS;
     }

@@ -22,7 +22,7 @@ echo "=== Creando usuario administrador y datos iniciales ==="
 php artisan db:seed --force
 
 echo "=== Limpiando productos (máx 3 por categoría) ==="
-php artisan db:seed --class=CleanupProductsSeeder --force
+php artisan products:cleanup --limit=3
 
 echo "=== Limpiando y cacheando configuración ==="
 php artisan config:cache
