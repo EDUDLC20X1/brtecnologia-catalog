@@ -31,13 +31,13 @@ class AdminQuoteController extends Controller
             $query->whereDate('created_at', '<=', $request->to);
         }
 
-        // Búsqueda
+        // Búsqueda (case-insensitive)
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = strtolower(trim($request->search));
             $query->where(function($q) use ($search) {
-                $q->where('quote_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('customer_email', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(quote_number) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(customer_name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(customer_email) LIKE ?', ["%{$search}%"]);
             });
         }
 

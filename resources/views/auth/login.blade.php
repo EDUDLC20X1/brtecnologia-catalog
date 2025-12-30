@@ -411,7 +411,7 @@
 
                 <div class="login-footer">
                     <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 1rem;">
-                        ¿No tienes cuenta? <a href="{{ route('register') }}" style="color: var(--admin-accent); text-decoration: none; font-weight: 600;">Regístrate aquí</a>
+                        <i class="bi bi-shield-lock"></i> Acceso exclusivo para administradores
                     </p>
                     <a href="{{ route('home') }}" class="back-link">
                         <i class="bi bi-arrow-left"></i>

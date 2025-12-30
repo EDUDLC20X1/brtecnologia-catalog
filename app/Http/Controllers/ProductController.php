@@ -19,13 +19,13 @@ class ProductController extends Controller
     {
         $query = Product::with(['category','images','mainImage']);
 
-        // Búsqueda por nombre, SKU o descripción
+        // Búsqueda por nombre, SKU o descripción (case-insensitive)
         if ($request->filled('search')) {
-            $search = $request->get('search');
+            $search = strtolower(trim($request->get('search')));
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku_code', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(sku_code) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"]);
             });
         }
 

@@ -17,12 +17,12 @@ class ProductApiController extends Controller
         $query = Product::with(['category', 'images', 'mainImage'])
             ->where('is_active', true);
 
-        // Búsqueda
+        // Búsqueda (case-insensitive)
         if ($request->filled('search')) {
-            $search = $request->get('search');
+            $search = strtolower(trim($request->get('search')));
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku_code', 'like', "%{$search}%");
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(sku_code) LIKE ?', ["%{$search}%"]);
             });
         }
 
@@ -117,9 +117,10 @@ class ProductApiController extends Controller
 
         $products = Product::where('is_active', true)
             ->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku_code', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                $searchLower = strtolower(trim($search));
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"])
+                  ->orWhereRaw('LOWER(sku_code) LIKE ?', ["%{$searchLower}%"])
+                  ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchLower}%"]);
             })
             ->with(['mainImage', 'category'])
             ->limit(10)

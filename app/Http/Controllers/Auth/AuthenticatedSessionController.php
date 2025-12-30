@@ -22,26 +22,28 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     * Solo permite el acceso a administradores.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
-
-        // Role-based redirect: admin -> admin dashboard, client -> catalog
         $user = $request->user();
 
-        // If an intended URL exists (was attempting to access protected route), prefer it
-        $intended = redirect()->intended()->getTargetUrl();
-
-        // If intended URL is the default HOME, ignore and use role-based
-        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard'));
+        // Verificar que sea administrador
+        if (!$user || !$user->isAdmin()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Acceso denegado. Solo los administradores pueden iniciar sesión.']);
         }
 
-        // For clients, send to catalog
-        return redirect()->intended(route('catalog.index'));
+        $request->session()->regenerate();
+
+        // Admin siempre va al dashboard
+        return redirect()->intended(route('admin.dashboard'));
     }
 
     /**

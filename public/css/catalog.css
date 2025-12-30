@@ -1,23 +1,8 @@
 /**
  * Estilos del Catálogo de Productos - B&R Tecnología 2025
  * Diseño moderno y profesional
+ * Variables centralizadas en: variables.css
  */
-
-/* ========================================
-   Variables - Consistente con el nuevo diseño
-   ======================================== */
-:root {
-    --catalog-primary: #0f172a;
-    --catalog-secondary: #1e3a5f;
-    --catalog-accent: #3b82f6;
-    --catalog-accent-hover: #2563eb;
-    --catalog-light: #f8fafc;
-    --catalog-border: #e2e8f0;
-    --catalog-text: #1f2937;
-    --catalog-text-muted: #6b7280;
-    --catalog-radius: 16px;
-    --catalog-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
 
 /* ========================================
    Barra de Categorías Superior
@@ -366,6 +351,7 @@
 .product-card-catalog {
     flex: 0 0 auto;
     width: 240px;
+    min-height: 380px;
     background: white;
     border: 1px solid var(--catalog-border);
     border-radius: var(--catalog-radius);
@@ -439,6 +425,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
 }
 
 .product-name {
@@ -489,6 +477,8 @@
     font-size: 0.9rem;
     font-weight: 600;
     transition: all 0.3s ease;
+    margin-top: auto;
+    min-height: 48px;
 }
 
 .btn-view-product:hover {
@@ -727,6 +717,101 @@
 
 .br-product-card {
     position: relative;
+    background: white;
+    border: 1px solid var(--catalog-border);
+    border-radius: var(--catalog-radius);
+    overflow: hidden;
+    height: 100%;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.br-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.br-product-media {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    overflow: hidden;
+}
+
+.br-product-media img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.br-product-card:hover .br-product-media img {
+    transform: scale(1.08);
+}
+
+.br-no-image {
+    font-size: 3rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.br-product-body {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 160px;
+}
+
+.br-product-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--catalog-text);
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6em;
+}
+
+.br-product-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--catalog-primary);
+    margin-bottom: 1rem;
+}
+
+.br-product-actions {
+    margin-top: auto;
+}
+
+.br-product-actions .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #3b82f6, #0ea5e9);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    min-height: 44px;
+}
+
+.br-product-actions .btn:hover {
+    background: linear-gradient(135deg, #2563eb, #0284c7);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
 }
 
 /* Animación de pulso sutil */

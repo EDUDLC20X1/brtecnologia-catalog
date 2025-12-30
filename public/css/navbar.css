@@ -1,0 +1,528 @@
+/* ============================================
+   NAVBAR B&R TECNOLOGÍA - Estilo Claro 2025
+   Versión: 3.0 - Diciembre 2025
+   ============================================ */
+
+/* ========== NAVBAR BASE ========== */
+.navbar-br {
+    background: var(--br-white);
+    padding: 0;
+    transition: all var(--transition-smooth);
+    border-bottom: 1px solid var(--br-border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 1030;
+    height: 64px;
+    min-height: 64px;
+    max-height: 64px;
+}
+
+.navbar-br.scrolled {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* ========== LOGO ========== */
+.navbar-br .navbar-brand {
+    padding: 0.25rem 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: auto;
+}
+
+.navbar-br .brand-logo {
+    max-height: 150px !important;
+    max-width: 150px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+.navbar-br .navbar-brand:hover .brand-logo {
+    opacity: 0.9;
+}
+
+/* ========== ENLACES DE NAVEGACIÓN ========== */
+.navbar-br .nav-link {
+    color: var(--br-dark-gray) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: 6px;
+    transition: all var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    position: relative;
+}
+
+.navbar-br .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--br-teal-blue);
+    transition: all var(--transition-smooth);
+    transform: translateX(-50%);
+    border-radius: 1px;
+}
+
+.navbar-br .nav-link:hover::after,
+.navbar-br .nav-link.active::after {
+    width: 70%;
+}
+
+.navbar-br .nav-link:hover,
+.navbar-br .nav-link:focus {
+    color: var(--br-teal-blue) !important;
+    background: transparent;
+}
+
+.navbar-br .nav-link.text-danger {
+    color: var(--br-danger) !important;
+}
+
+.navbar-br .nav-link.text-danger:hover {
+    color: #c0392b !important;
+}
+
+.navbar-br .nav-link i {
+    color: var(--br-teal-blue);
+}
+
+/* ========== DROPDOWNS ========== */
+.navbar-br .dropdown-menu {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    min-width: 220px;
+    animation: navDropdownFadeIn 0.2s ease;
+    backdrop-filter: blur(10px);
+    z-index: 1050;
+}
+
+@keyframes navDropdownFadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-br .dropdown-item {
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.navbar-br .dropdown-item:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.navbar-br .dropdown-item:hover i {
+    color: #ffffff;
+}
+
+.navbar-br .dropdown-item i {
+    width: 22px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.navbar-br .dropdown-divider {
+    margin: 0.4rem 0.75rem;
+    border-color: var(--br-border);
+}
+
+.navbar-br .dropdown-header-custom {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--br-dark-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+/* ========== BUSCADOR DESKTOP ========== */
+.navbar-br .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-br .search-box .search-icon {
+    display: none;
+}
+
+.navbar-br .search-box input {
+    width: 180px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px 0 0 6px;
+    color: #1e293b;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    transition: all 0.2s ease;
+    height: 36px;
+}
+
+.navbar-br .search-box input::placeholder {
+    color: #64748b;
+    font-weight: 400;
+}
+
+.navbar-br .search-box input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+}
+
+/* Botón de búsqueda */
+.navbar-br .search-box::after {
+    content: '';
+    display: none;
+}
+
+.navbar-br form[action*="catalog"] {
+    display: flex;
+}
+
+.navbar-br form[action*="catalog"] .search-box {
+    position: relative;
+}
+
+.navbar-br form[action*="catalog"] .search-box input {
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+}
+
+/* ========== BOTÓN COTIZACIÓN ========== */
+.navbar-br .btn-cart {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--br-white);
+    border: 1px solid var(--br-border);
+    border-radius: 6px;
+    color: var(--br-success);
+    font-size: 1.1rem;
+    transition: all var(--transition-smooth);
+    position: relative;
+}
+
+.navbar-br .btn-cart:hover {
+    background: var(--br-success);
+    border-color: var(--br-success);
+    color: var(--br-white);
+}
+
+/* Botón de búsqueda */
+.navbar-br .btn-search-nav {
+    background: #0f766e;
+    border: 1px solid #0f766e;
+    border-radius: 0 6px 6px 0;
+    color: #ffffff;
+    padding: 0 0.75rem;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    height: 36px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-br .btn-search-nav:hover {
+    background: #115e59;
+    border-color: #115e59;
+    color: #ffffff;
+}
+
+.navbar-br .quote-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, var(--br-danger), #c0392b);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.15em 0.45em;
+    border-radius: 50px;
+    min-width: 16px;
+    text-align: center;
+    animation: navPulse 2s infinite;
+}
+
+@keyframes navPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ========== BOTONES LOGIN/REGISTER ========== */
+.navbar-br .btn-login {
+    background: transparent;
+    border: 1px solid var(--br-border);
+    color: var(--br-dark-gray);
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all var(--transition-smooth);
+}
+
+.navbar-br .btn-login:hover {
+    background: var(--br-light-gray);
+    border-color: var(--br-teal-blue);
+    color: var(--br-teal-blue);
+}
+
+.navbar-br .btn-register {
+    background: var(--br-teal-blue);
+    border: none;
+    color: var(--br-white);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all var(--transition-smooth);
+}
+
+.navbar-br .btn-register:hover {
+    background: var(--br-dark-blue);
+    color: var(--br-white);
+}
+
+/* ========== BOTÓN USUARIO ========== */
+.navbar-br .btn-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--br-light-gray);
+    border: 1px solid var(--br-border);
+    color: var(--br-dark-gray);
+    padding: 0.35rem 0.9rem 0.35rem 0.4rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all var(--transition-smooth);
+}
+
+.navbar-br .btn-user:hover {
+    background: var(--br-white);
+    border-color: var(--br-teal-blue);
+    color: var(--br-teal-blue);
+}
+
+.navbar-br .btn-user .user-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--br-teal-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.navbar-br .btn-user .user-name {
+    font-weight: 500;
+}
+
+/* ========== TOGGLER MÓVIL ========== */
+.navbar-br .navbar-toggler {
+    color: var(--br-dark-blue);
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--br-border);
+    transition: all 0.2s;
+}
+
+.navbar-br .navbar-toggler:hover {
+    background: var(--br-light-gray);
+}
+
+.navbar-br .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* ========== MENÚ MÓVIL ========== */
+@media (max-width: 991.98px) {
+    .navbar-br .navbar-collapse,
+    .navbar .navbar-collapse,
+    #navbarMain.collapse.show,
+    #navbarMain.collapsing {
+        background: #ffffff !important;
+        margin-top: 0.5rem;
+        padding: 1.25rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border: 1px solid #e2e8f0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+    }
+    
+    .navbar-br .navbar-nav {
+        margin-bottom: 1rem;
+    }
+    
+    .navbar-br .nav-link {
+        color: #1e293b !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.95rem !important;
+        margin: 0.1rem 0;
+        border-radius: 8px;
+    }
+    
+    .navbar-br .nav-link:hover {
+        background: #f1f5f9;
+        color: #0f766e !important;
+    }
+    
+    .navbar-br .nav-link::after {
+        display: none;
+    }
+    
+    .navbar-br .dropdown-menu {
+        position: relative !important;
+        transform: none !important;
+        width: 100%;
+        background: var(--br-light-gray) !important;
+        box-shadow: none;
+        border: none;
+        margin: 0.4rem 0 0.8rem 0;
+        z-index: 1051;
+    }
+    
+    .navbar-br .dropdown-item {
+        color: var(--br-dark-gray);
+        padding: 0.65rem 1rem;
+    }
+    
+    .navbar-br .dropdown-item:hover {
+        background: var(--br-white);
+        color: var(--br-teal-blue);
+        transform: none;
+    }
+    
+    .navbar-br .dropdown-divider {
+        border-color: var(--br-border);
+    }
+    
+    .navbar-br .dropdown-header-custom {
+        color: var(--br-dark-gray);
+        opacity: 0.7;
+    }
+    
+    /* Búsqueda Móvil */
+    .navbar-br .mobile-search {
+        background: var(--br-white);
+        border: 1px solid var(--br-border);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .navbar-br .mobile-search input {
+        background: transparent !important;
+        border: none !important;
+        color: var(--br-dark-gray) !important;
+        padding: 0.75rem 1rem;
+    }
+    
+    .navbar-br .mobile-search input::placeholder {
+        color: #999 !important;
+    }
+    
+    .navbar-br .mobile-search .btn {
+        background: var(--br-teal-blue);
+        border: none;
+        color: white;
+        border-radius: 0;
+    }
+    
+    /* Menú Usuario Móvil */
+    .navbar-br .mobile-user-menu {
+        background: var(--br-light-gray);
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid var(--br-border);
+    }
+    
+    .navbar-br .mobile-user-header {
+        display: flex;
+        align-items: center;
+        color: var(--br-dark-blue);
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid var(--br-border);
+        font-size: 1rem;
+    }
+    
+    .navbar-br .mobile-user-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        margin-top: 0.65rem;
+    }
+    
+    .navbar-br .mobile-user-link {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.65rem 0.85rem;
+        color: var(--br-dark-gray);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+    
+    .navbar-br .mobile-user-link:hover {
+        background: var(--br-white);
+        color: var(--br-teal-blue);
+    }
+    
+    .navbar-br .mobile-user-link i {
+        font-size: 1rem;
+        width: 22px;
+        text-align: center;
+        color: var(--br-teal-blue);
+    }
+}
+
+/* ========== RESPONSIVE DESKTOP ========== */
+@media (min-width: 992px) {
+    .navbar-br .brand-logo {
+        height: 70px !important;
+        max-width: 280px !important;
+    }
+    
+    .navbar-br .search-box input {
+        width: 180px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-br .brand-logo {
+        height: 75px !important;
+        max-width: 300px !important;
+    }
+    
+    .navbar-br .search-box input {
+        width: 200px;
+    }
+}

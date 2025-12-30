@@ -1,20 +1,7 @@
 /* Revert to Bootstrap styles: import Bootstrap's CSS
-	 If you need custom overrides, add them below. */
+	 If you need custom overrides, add them below.
+   Variables centralizadas en: public/css/variables.css */
 @import "bootstrap/dist/css/bootstrap.min.css";
-
-/* ========== COLOR PALETTE - B&R TECNOLOGÍA ========== */
-:root {
-	--br-dark-blue: #0D2A4F;
-	--br-teal-blue: #0C5F6C;
-	--br-light-gray: #F5F6FA;
-	--br-dark-gray: #2C3E50;
-	--br-white: #FFFFFF;
-	--br-accent: #FF6B35;
-	--br-success: #27AE60;
-	--br-danger: #E74C3C;
-	--br-border: #E0E6F2;
-	--transition-smooth: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
 
 /* ========== GLOBAL STYLES ========== */
 * {
@@ -57,100 +44,6 @@ a {
 a:hover {
 	color: var(--br-dark-blue);
 	text-decoration: none;
-}
-
-/* ========== NAVBAR STYLES ========== */
-.navbar {
-	background-color: var(--br-white);
-	border-bottom: 1px solid var(--br-border);
-	box-shadow: 0 2px 8px rgba(13, 42, 79, 0.08);
-	padding: 1rem 0;
-}
-
-.navbar-brand {
-	font-size: 1.8rem;
-	font-weight: 700;
-	color: var(--br-dark-blue) !important;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	letter-spacing: -0.5px;
-}
-
-.navbar-brand img {
-	height: 45px;
-	width: auto;
-}
-
-.navbar-brand:hover {
-	color: var(--br-teal-blue) !important;
-	transition: color var(--transition-smooth);
-}
-
-.nav-link {
-	color: var(--br-dark-gray) !important;
-	font-weight: 500;
-	font-size: 0.95rem;
-	padding: 0.5rem 1rem !important;
-	transition: color var(--transition-smooth);
-	position: relative;
-}
-
-.nav-link:hover,
-.nav-link.active {
-	color: var(--br-teal-blue) !important;
-}
-
-.nav-link::after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	width: 0;
-	height: 2px;
-	background-color: var(--br-teal-blue);
-	transition: all var(--transition-smooth);
-	transform: translateX(-50%);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-	width: 80%;
-}
-
-.search-bar {
-	background-color: var(--br-light-gray);
-	border: 1px solid var(--br-border);
-	border-radius: 8px;
-	overflow: hidden;
-}
-
-.search-bar input {
-	background-color: transparent;
-	border: none;
-	color: var(--br-dark-gray);
-	font-size: 0.9rem;
-}
-
-.search-bar input::placeholder {
-	color: #999;
-}
-
-.search-bar input:focus {
-	outline: none;
-	box-shadow: none;
-}
-
-.search-bar button {
-	border: none;
-	background-color: var(--br-teal-blue);
-	color: white;
-	cursor: pointer;
-	transition: background-color var(--transition-smooth);
-}
-
-.search-bar button:hover {
-	background-color: var(--br-dark-blue);
 }
 
 /* ========== HERO SECTION ========== */
@@ -762,16 +655,7 @@ h1, h2, h3, h4, h5, h6 {
 	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
-.navbar-brand {
-	font-weight: 700;
-	font-size: 1.5rem;
-	color: var(--primary-color) !important;
-}
-
-.navbar-brand:hover {
-	transform: scale(1.02);
-	transition: transform var(--transition-speed);
-}
+/* Los estilos de .navbar-brand se manejan en navbar.css */
 
 /* Hero Carousel */
 .carousel-item {
@@ -978,9 +862,7 @@ section {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-	.navbar-brand {
-		font-size: 1.25rem;
-	}
+	/* Los estilos de .navbar-brand se manejan en navbar.css */
 
 	.carousel-item {
 		min-height: 250px;

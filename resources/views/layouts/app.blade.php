@@ -28,10 +28,10 @@
 
         <!-- Page styles -->
         @yield('styles')
+        <!-- CSS Variables centralizadas -->
+        <link rel="stylesheet" href="{{ asset('css/variables.css') }}">
         <!-- Site styles (cards, hero) -->
         <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-        <!-- Client panel styles -->
-        <link rel="stylesheet" href="{{ asset('css/client.css') }}">
         <!-- Accessibility & Legibility improvements -->
         <link rel="stylesheet" href="{{ asset('css/accessibility.css') }}">
 

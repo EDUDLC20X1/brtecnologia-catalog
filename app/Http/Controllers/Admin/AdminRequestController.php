@@ -41,14 +41,14 @@ class AdminRequestController extends Controller
             $query->whereDate('created_at', '<=', $request->to);
         }
 
-        // Búsqueda por nombre o email
+        // Búsqueda por nombre o email (case-insensitive)
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = strtolower(trim($request->search));
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"])
                   ->orWhereHas('product', function($pq) use ($search) {
-                      $pq->where('name', 'like', "%{$search}%");
+                      $pq->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
                   });
             });
         }

@@ -34,10 +34,10 @@
             <div class="mb-3">
                 <label class="form-label"><strong>Precio</strong></label>
                 <div class="d-flex gap-2 mt-2">
-                    <input type="number" name="price_min" id="priceMin" class="form-control" placeholder="Mín" value="{{ request('price_min', $priceRange->min_price ?? 0) }}">
-                    <input type="number" name="price_max" id="priceMax" class="form-control" placeholder="Máx" value="{{ request('price_max', $priceRange->max_price ?? 0) }}">
+                    <input type="number" name="price_min" id="priceMin" class="form-control" placeholder="Mín" value="{{ request('price_min') }}" min="0" step="0.01">
+                    <input type="number" name="price_max" id="priceMax" class="form-control" placeholder="Máx" value="{{ request('price_max') }}" min="0" step="0.01">
                 </div>
-                <small class="text-muted d-block mt-2">Rango disponible: ${{ number_format($priceRange->min_price,2) }} - ${{ number_format($priceRange->max_price,2) }}</small>
+                <small class="text-muted d-block mt-2">Ingresa el rango de precio deseado</small>
             </div>
 
             <div class="mb-3">

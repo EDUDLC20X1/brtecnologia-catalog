@@ -11,6 +11,12 @@ class CloudinaryService
     protected $cloudName;
     protected $apiKey;
     protected $apiSecret;
+    
+    // Configuración de compresión
+    const MAX_FILE_SIZE = 500 * 1024; // 500KB en bytes
+    const MAX_WIDTH = 1200;
+    const MAX_HEIGHT = 1200;
+    const JPEG_QUALITY = 85;
 
     public function __construct()
     {
@@ -38,7 +44,97 @@ class CloudinaryService
     }
 
     /**
-     * Upload an image to Cloudinary
+     * Comprimir imagen antes de subir (máx 500KB)
+     */
+    protected function compressImage(UploadedFile $file): string
+    {
+        $originalPath = $file->getPathname();
+        $originalSize = $file->getSize();
+        
+        // Si ya es menor a 500KB y no es muy grande, devolver original
+        if ($originalSize <= self::MAX_FILE_SIZE) {
+            return base64_encode(file_get_contents($originalPath));
+        }
+        
+        // Verificar si GD está disponible
+        if (!extension_loaded('gd')) {
+            Log::warning('GD extension not available, uploading original image');
+            return base64_encode(file_get_contents($originalPath));
+        }
+        
+        try {
+            $mimeType = $file->getMimeType();
+            
+            // Crear imagen desde el archivo
+            $image = match($mimeType) {
+                'image/jpeg', 'image/jpg' => imagecreatefromjpeg($originalPath),
+                'image/png' => imagecreatefrompng($originalPath),
+                'image/gif' => imagecreatefromgif($originalPath),
+                'image/webp' => function_exists('imagecreatefromwebp') ? imagecreatefromwebp($originalPath) : null,
+                default => null,
+            };
+            
+            if (!$image) {
+                return base64_encode(file_get_contents($originalPath));
+            }
+            
+            // Obtener dimensiones originales
+            $width = imagesx($image);
+            $height = imagesy($image);
+            
+            // Calcular nuevas dimensiones manteniendo proporción
+            $ratio = min(self::MAX_WIDTH / $width, self::MAX_HEIGHT / $height, 1);
+            $newWidth = (int)($width * $ratio);
+            $newHeight = (int)($height * $ratio);
+            
+            // Redimensionar si es necesario
+            if ($ratio < 1) {
+                $resized = imagecreatetruecolor($newWidth, $newHeight);
+                
+                // Preservar transparencia para PNG
+                if ($mimeType === 'image/png') {
+                    imagealphablending($resized, false);
+                    imagesavealpha($resized, true);
+                    $transparent = imagecolorallocatealpha($resized, 255, 255, 255, 127);
+                    imagefilledrectangle($resized, 0, 0, $newWidth, $newHeight, $transparent);
+                }
+                
+                imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                imagedestroy($image);
+                $image = $resized;
+            }
+            
+            // Comprimir a JPEG con calidad ajustable
+            ob_start();
+            $quality = self::JPEG_QUALITY;
+            
+            // Reducir calidad iterativamente si es necesario
+            do {
+                ob_clean();
+                imagejpeg($image, null, $quality);
+                $compressedData = ob_get_contents();
+                $quality -= 5;
+            } while (strlen($compressedData) > self::MAX_FILE_SIZE && $quality > 50);
+            
+            ob_end_clean();
+            imagedestroy($image);
+            
+            Log::info('Image compressed', [
+                'original_size' => $originalSize,
+                'compressed_size' => strlen($compressedData),
+                'reduction' => round((1 - strlen($compressedData) / $originalSize) * 100, 1) . '%',
+            ]);
+            
+            return base64_encode($compressedData);
+            
+        } catch (\Exception $e) {
+            Log::error('Image compression failed', ['error' => $e->getMessage()]);
+            return base64_encode(file_get_contents($originalPath));
+        }
+    }
+
+    /**
+     * Upload an image to Cloudinary with automatic compression
      *
      * @param UploadedFile $file
      * @param string $folder
@@ -71,10 +167,9 @@ class CloudinaryService
                 'file_size' => $file->getSize(),
             ]);
 
-            // Use base64 encoding for the file
-            $fileContent = base64_encode(file_get_contents($file->getPathname()));
-            $mimeType = $file->getMimeType();
-            $base64File = "data:{$mimeType};base64,{$fileContent}";
+            // Comprimir imagen antes de subir
+            $compressedBase64 = $this->compressImage($file);
+            $base64File = "data:image/jpeg;base64,{$compressedBase64}";
 
             $response = Http::asForm()
                 ->timeout(120)

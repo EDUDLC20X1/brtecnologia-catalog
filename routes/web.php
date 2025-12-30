@@ -9,11 +9,8 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AdminRequestController;
-use App\Http\Controllers\Admin\AdminStatsController;
-use App\Http\Controllers\Client\ClientDashboardController;
-use App\Http\Controllers\Client\FavoriteController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Client\ProductRequestController;
-use App\Http\Controllers\Client\ProductHistoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 | Web Routes - Catálogo B&R Tecnología
 |--------------------------------------------------------------------------
 |
-| Sistema de autenticación con dos tipos de usuarios:
+| Sistema público de catálogo con panel de administración.
+| - Público: Catálogo, cotizaciones, solicitudes (sin login)
 | - Administrador: Gestión completa del sistema
-| - Cliente: Favoritos, historial, solicitudes, personalización
 |
 */
 
@@ -70,40 +67,6 @@ Route::prefix('cotizacion')->name('quote.')->group(function () {
     Route::get('/ver/{quote}', [QuoteController::class, 'view'])->name('view');
     Route::get('/pdf/{quote}', [QuoteController::class, 'downloadPdf'])->name('pdf');
     Route::get('/count', [QuoteController::class, 'getCount'])->name('count');
-});
-
-// ============================================
-// RUTAS DE CLIENTE AUTENTICADO
-// ============================================
-
-Route::middleware(['auth', 'client'])->prefix('mi-cuenta')->name('client.')->group(function () {
-    // Dashboard del cliente
-    Route::get('/', [ClientDashboardController::class, 'index'])->name('dashboard');
-    
-    // Favoritos
-    Route::get('/favoritos', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/favoritos/{product}/toggle', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
-    Route::get('/favoritos/{product}/check', [FavoriteController::class, 'check'])->name('favorites.check');
-    Route::put('/favoritos/{product}/notes', [FavoriteController::class, 'updateNotes'])->name('favorites.notes');
-    Route::delete('/favoritos/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
-    Route::post('/favoritos/check-multiple', [FavoriteController::class, 'checkMultiple'])->name('favorites.check-multiple');
-    
-    
-    // Solicitudes
-    Route::get('/solicitudes', [ProductRequestController::class, 'index'])->name('requests.index');
-    Route::get('/solicitudes/{productRequest}', [ProductRequestController::class, 'show'])->name('requests.show');
-    Route::post('/solicitudes/{productRequest}/cancelar', [ProductRequestController::class, 'cancel'])->name('requests.cancel');
-    
-    // Historial de productos vistos
-    Route::get('/historial', [ProductHistoryController::class, 'index'])->name('history.index');
-    Route::delete('/historial', [ProductHistoryController::class, 'clear'])->name('history.clear');
-});
-
-// API para favoritos (solo para clientes autenticados, no admins)
-Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
-    Route::post('/favorites/{product}/toggle', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
-    Route::get('/favorites/{product}/check', [FavoriteController::class, 'check'])->name('favorites.check');
-    Route::post('/favorites/check-multiple', [FavoriteController::class, 'checkMultiple'])->name('favorites.check-multiple');
 });
 
 // ============================================
@@ -160,17 +123,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/solicitudes/{productRequest}/respond', [AdminRequestController::class, 'respond'])->name('admin.requests.respond');
     Route::delete('/admin/solicitudes/{productRequest}', [AdminRequestController::class, 'destroy'])->name('admin.requests.destroy');
     
-    // Panel de Estadísticas (Admin)
-    Route::get('/admin/estadisticas', [AdminStatsController::class, 'index'])->name('admin.stats.index');
-    Route::get('/admin/estadisticas/data', [AdminStatsController::class, 'getData'])->name('admin.stats.data');
-    Route::get('/admin/estadisticas/export', [AdminStatsController::class, 'export'])->name('admin.stats.export');
-    
     // Gestión de Cotizaciones (Admin)
     Route::get('/admin/cotizaciones', [App\Http\Controllers\Admin\AdminQuoteController::class, 'index'])->name('admin.quotes.index');
     Route::get('/admin/cotizaciones/{quote}', [App\Http\Controllers\Admin\AdminQuoteController::class, 'show'])->name('admin.quotes.show');
     Route::patch('/admin/cotizaciones/{quote}/status', [App\Http\Controllers\Admin\AdminQuoteController::class, 'updateStatus'])->name('admin.quotes.status');
     Route::get('/admin/cotizaciones/{quote}/pdf', [App\Http\Controllers\Admin\AdminQuoteController::class, 'downloadPdf'])->name('admin.quotes.pdf');
     Route::delete('/admin/cotizaciones/{quote}', [App\Http\Controllers\Admin\AdminQuoteController::class, 'destroy'])->name('admin.quotes.destroy');
+    
+    // Gestión de Usuarios Administradores
+    Route::get('/admin/usuarios', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/usuarios/crear', [AdminUserController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/usuarios', [AdminUserController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/usuarios/{user}/editar', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/usuarios/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/usuarios/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
     
     // Productos
     Route::get('/products/exports', function () { return redirect('/products/export'); });
