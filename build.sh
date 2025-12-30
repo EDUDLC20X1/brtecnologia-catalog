@@ -15,11 +15,8 @@ chmod -R 775 storage bootstrap/cache
 echo "=== Creando enlace simbólico de storage ==="
 php artisan storage:link --force || true
 
-echo "=== Ejecutando migraciones ==="
-php artisan migrate --force
-
-echo "=== Creando usuario administrador y datos iniciales ==="
-php artisan db:seed --force
+echo "=== RESET COMPLETO: Borrando y recreando base de datos ==="
+php artisan migrate:fresh --seed --force
 
 echo "=== Limpiando productos (máx 3 por categoría) ==="
 php artisan products:cleanup --limit=3
