@@ -24,6 +24,23 @@
         z-index: 1050;
     }
 }
+
+/* Asegurar fondo blanco en TODOS los dropdowns */
+.dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+}
+
+.dropdown-item {
+    background-color: transparent;
+    color: #1e293b !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%) !important;
+    color: #ffffff !important;
+}
 </style>
 
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top" style="height: 64px; min-height: 64px; max-height: 64px;">

@@ -21,6 +21,9 @@ php artisan migrate --force
 echo "=== Creando usuario administrador y datos iniciales ==="
 php artisan db:seed --force
 
+echo "=== Limpiando productos (máx 3 por categoría) ==="
+php artisan db:seed --class=CleanupProductsSeeder --force
+
 echo "=== Limpiando y cacheando configuración ==="
 php artisan config:cache
 php artisan route:cache
