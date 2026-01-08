@@ -21,7 +21,7 @@ class ProductsExportReady extends Mailable
 
     public function build()
     {
-        $mail = $this->subject('Your products export is ready')
+        $mail = $this->subject('Tu exportación de productos está lista')
                     ->markdown('emails.products_export_ready')
                     ->with(['url' => $this->url]);
 

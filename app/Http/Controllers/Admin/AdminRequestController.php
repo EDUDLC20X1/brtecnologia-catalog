@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductRequest;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminRequestController extends Controller
 {
@@ -129,7 +130,7 @@ class AdminRequestController extends Controller
     }
 
     /**
-     * Exportar solicitudes a CSV
+     * Exportar solicitudes a PDF
      */
     public function export(Request $request)
     {
@@ -142,38 +143,11 @@ class AdminRequestController extends Controller
 
         $requests = $query->get();
         
-        $filename = 'solicitudes_' . date('Y-m-d_H-i-s') . '.csv';
+        $filename = 'solicitudes_' . date('Y-m-d_H-i-s') . '.pdf';
         
-        $headers = [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-        ];
+        $pdf = Pdf::loadView('pdf.requests_export', compact('requests'));
+        $pdf->setPaper('a4', 'landscape');
         
-        $callback = function() use ($requests) {
-            $file = fopen('php://output', 'w');
-            // BOM for UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
-            // Headers
-            fputcsv($file, ['ID', 'Fecha', 'Nombre', 'Email', 'Teléfono', 'Producto', 'Mensaje', 'Estado', 'Respuesta Admin']);
-            
-            foreach ($requests as $r) {
-                fputcsv($file, [
-                    $r->id,
-                    $r->created_at->format('d/m/Y H:i'),
-                    $r->name,
-                    $r->email,
-                    $r->phone ?? 'N/A',
-                    $r->product?->name ?? 'N/A',
-                    $r->message,
-                    self::STATUSES[$r->status]['label'] ?? $r->status,
-                    $r->admin_reply ?? ''
-                ]);
-            }
-            
-            fclose($file);
-        };
-        
-        return response()->stream($callback, 200, $headers);
+        return $pdf->download($filename);
     }
 }

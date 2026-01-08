@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Product;
 use App\Mail\ProductsExportReady;
 use App\Services\MailService;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductsExportJob implements ShouldQueue
 {
@@ -32,54 +33,15 @@ class ProductsExportJob implements ShouldQueue
         Storage::disk('public')->put('exports/.keep', '');
 
         $timestamp = now()->format('Ymd_His');
+        $filename = 'exports/products_export_'.$timestamp.'.pdf';
 
-        // If PhpSpreadsheet is available, create XLSX, otherwise fallback to CSV
-        if (class_exists('\\PhpOffice\\PhpSpreadsheet\\Spreadsheet')) {
-            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            // Header
-            $sheet->fromArray([
-                ['ID','SKU','Name','Category','Price','Stock','Active','Created At']
-            ], null, 'A1');
-
-            $row = 2;
-            foreach ($products as $p) {
-                $sheet->setCellValue("A{$row}", $p->id);
-                $sheet->setCellValue("B{$row}", $p->sku_code);
-                $sheet->setCellValue("C{$row}", $p->name);
-                $sheet->setCellValue("D{$row}", $p->category?->name ?? 'Uncategorized');
-                $sheet->setCellValue("E{$row}", $p->price_base);
-                $sheet->setCellValue("F{$row}", $p->stock_available);
-                $sheet->setCellValue("G{$row}", $p->is_active ? 'yes' : 'no');
-                $sheet->setCellValue("H{$row}", $p->created_at);
-                $row++;
-            }
-
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-            $filename = 'exports/products_export_'.$timestamp.'.xlsx';
-            $tmpPath = sys_get_temp_dir().'/'.basename($filename);
-            $writer->save($tmpPath);
-
-        } else {
-            // Fallback CSV
-            $filename = 'exports/products_export_'.$timestamp.'.csv';
-            $tmpPath = sys_get_temp_dir().'/'.basename($filename);
-            $fh = fopen($tmpPath, 'w');
-            fputcsv($fh, ['ID','SKU','Name','Category','Price','Stock','Active','Created At']);
-            foreach ($products as $p) {
-                fputcsv($fh, [
-                    $p->id,
-                    $p->sku_code,
-                    $p->name,
-                    $p->category?->name ?? 'Uncategorized',
-                    $p->price_base,
-                    $p->stock_available,
-                    $p->is_active ? 'yes' : 'no',
-                    $p->created_at,
-                ]);
-            }
-            fclose($fh);
-        }
+        // Generar PDF
+        $pdf = Pdf::loadView('pdf.products_export', compact('products'));
+        $pdf->setPaper('a4', 'landscape');
+        
+        // Guardar PDF temporalmente
+        $tmpPath = sys_get_temp_dir().'/'.basename($filename);
+        $pdf->save($tmpPath);
 
         // Store file to public disk
         try {

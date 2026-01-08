@@ -1,15 +1,15 @@
 @component('mail::message')
 
-# Export listo
+# Exportación Lista
 
-Tu exportación de productos está lista. Puedes descargarla desde el siguiente enlace:
+Tu exportación de productos en PDF está lista. Puedes descargarla desde el siguiente enlace:
 
 @component('mail::button', ['url' => $url])
-Descargar export
+Descargar PDF
 @endcomponent
 
 Gracias,
 
-El equipo de B&R Tecnology
+El equipo de B&R Tecnología
 
 @endcomponent

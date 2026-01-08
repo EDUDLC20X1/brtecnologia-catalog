@@ -12,8 +12,8 @@
             </h1>
             <p class="text-muted mb-0">Administra las solicitudes de información de productos</p>
         </div>
-        <a href="{{ route('admin.requests.export', request()->query()) }}" class="btn btn-outline-success">
-            <i class="bi bi-file-earmark-excel me-1"></i>Exportar CSV
+        <a href="{{ route('admin.requests.export', request()->query()) }}" class="btn btn-outline-danger">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Exportar PDF
         </a>
     </div>
 
