@@ -149,35 +149,42 @@
                                 <small class="text-muted">{{ $request->created_at->format('H:i') }}</small>
                             </td>
                             <td class="text-end">
-                                <div class="btn-group btn-group-sm">
+                                <div class="d-flex justify-content-end gap-1">
                                     {{-- Cambio rápido de estado --}}
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Cambiar estado">
-                                            <i class="bi bi-arrow-repeat"></i>
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                                id="statusDropdown{{ $request->id }}" 
+                                                data-bs-toggle="dropdown" 
+                                                aria-expanded="false"
+                                                title="Cambiar estado">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Cambiar estado
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
+                                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="statusDropdown{{ $request->id }}">
+                                            <li><h6 class="dropdown-header">Cambiar estado a:</h6></li>
                                             @foreach($statuses as $key => $st)
-                                                @if($key != $request->status)
-                                                    <li>
-                                                        <form action="{{ route('admin.requests.status', $request) }}" method="POST">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="status" value="{{ $key }}">
-                                                            <button type="submit" class="dropdown-item">
-                                                                <i class="bi bi-{{ $st['icon'] }} text-{{ $st['color'] }} me-2"></i>{{ $st['label'] }}
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @endif
+                                                <li>
+                                                    <form action="{{ route('admin.requests.status', $request) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="status" value="{{ $key }}">
+                                                        <button type="submit" class="dropdown-item {{ $key == $request->status ? 'active' : '' }}">
+                                                            <i class="bi bi-{{ $st['icon'] }} text-{{ $st['color'] }} me-2"></i>
+                                                            {{ $st['label'] }}
+                                                            @if($key == $request->status)
+                                                                <i class="bi bi-check2 ms-2"></i>
+                                                            @endif
+                                                        </button>
+                                                    </form>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                     
-                                    <a href="{{ route('admin.requests.show', $request) }}" class="btn btn-outline-primary" title="Ver detalles">
+                                    <a href="{{ route('admin.requests.show', $request) }}" class="btn btn-sm btn-outline-primary" title="Ver detalles">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     
-                                    <button type="button" class="btn btn-outline-danger" 
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
                                             onclick="if(confirm('¿Eliminar esta solicitud?')) document.getElementById('delete-{{ $request->id }}').submit();"
                                             title="Eliminar">
                                         <i class="bi bi-trash"></i>
