@@ -137,7 +137,23 @@
                 <div class="card-body">
                     <h5 class="card-title mb-2">Especificaciones técnicas</h5>
                     @if(!empty($product->technical_specs))
-                        <div class="small text-muted">{!! nl2br(e($product->technical_specs)) !!}</div>
+                        @php
+                            $specs = $product->technical_specs;
+                            // Si es string JSON, decodificar
+                            if (is_string($specs)) {
+                                $decoded = json_decode($specs, true);
+                                $specs = $decoded ?: $specs;
+                            }
+                        @endphp
+                        @if(is_array($specs))
+                            <ul class="list-unstyled small text-muted mb-0">
+                                @foreach($specs as $key => $value)
+                                    <li><strong>{{ $key }}:</strong> {{ $value }}</li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <div class="small text-muted">{!! nl2br(e($specs)) !!}</div>
+                        @endif
                     @else
                         <div class="small text-muted">No hay especificaciones disponibles.</div>
                     @endif
