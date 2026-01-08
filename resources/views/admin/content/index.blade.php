@@ -27,28 +27,28 @@
                                 <div class="d-flex align-items-center mb-3">
                                     @switch($sectionKey)
                                         @case('global')
-                                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
-                                                <i class="bi bi-gear text-primary fs-4"></i>
+                                            <div class="rounded-circle bg-secondary bg-opacity-10 p-3 me-3">
+                                                <i class="bi bi-gear-fill text-secondary fs-4"></i>
                                             </div>
                                             @break
                                         @case('home')
                                             <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
-                                                <i class="bi bi-house text-success fs-4"></i>
+                                                <i class="bi bi-house-fill text-success fs-4"></i>
                                             </div>
                                             @break
                                         @case('about')
                                             <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
-                                                <i class="bi bi-info-circle text-info fs-4"></i>
+                                                <i class="bi bi-info-circle-fill text-info fs-4"></i>
                                             </div>
                                             @break
                                         @case('contact')
                                             <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
-                                                <i class="bi bi-envelope text-warning fs-4"></i>
+                                                <i class="bi bi-envelope-fill text-warning fs-4"></i>
                                             </div>
                                             @break
                                         @case('banners')
                                             <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
-                                                <i class="bi bi-megaphone text-danger fs-4"></i>
+                                                <i class="bi bi-megaphone-fill text-danger fs-4"></i>
                                             </div>
                                             @break
                                     @endswitch
