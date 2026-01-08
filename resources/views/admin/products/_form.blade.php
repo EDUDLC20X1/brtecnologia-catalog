@@ -65,8 +65,24 @@
 
                             <div class="col-12">
                                 <label for="technical_specs" class="form-label">Especificaciones Técnicas</label>
-                                <textarea name="technical_specs" id="technical_specs" class="form-control @error('technical_specs') is-invalid @enderror" rows="3" placeholder="RAM: 8GB; CPU: i5; Almacenamiento: 256GB SSD">{{ old('technical_specs', $product->technical_specs ?? '') }}</textarea>
+                                @php
+                                    $specsValue = old('technical_specs');
+                                    if (!$specsValue && isset($product) && $product->technical_specs) {
+                                        $specs = $product->technical_specs;
+                                        if (is_array($specs)) {
+                                            $lines = [];
+                                            foreach ($specs as $key => $value) {
+                                                $lines[] = $key . ': ' . $value;
+                                            }
+                                            $specsValue = implode("\n", $lines);
+                                        } else {
+                                            $specsValue = $specs;
+                                        }
+                                    }
+                                @endphp
+                                <textarea name="technical_specs" id="technical_specs" class="form-control @error('technical_specs') is-invalid @enderror" rows="3" placeholder="RAM: 8GB&#10;CPU: i5&#10;Almacenamiento: 256GB SSD">{{ $specsValue ?? '' }}</textarea>
                                 @error('technical_specs')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                <small class="text-muted">Escriba cada especificación en una línea separada (ej: RAM: 8GB)</small>
                             </div>
                         </div>
                     </div>

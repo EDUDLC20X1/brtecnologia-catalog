@@ -115,21 +115,6 @@
                     </button>
                 @endif
                 
-                @auth
-                    @if(!auth()->user()->isAdmin())
-                        <button type="button" 
-                                class="btn btn-lg favorite-btn {{ auth()->user()->hasFavorited($product->id) ? 'btn-danger' : 'btn-outline-danger' }}" 
-                                onclick="toggleFavorite('{{ $product->slug }}', this)"
-                                data-product-slug="{{ $product->slug }}">
-                            <i class="bi {{ auth()->user()->hasFavorited($product->id) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
-                            <span>{{ auth()->user()->hasFavorited($product->id) ? 'En Favoritos' : 'Agregar a Favoritos' }}</span>
-                        </button>
-                    @endif
-                @else
-                    <a href="{{ route('login') }}?redirect={{ urlencode(request()->url()) }}" class="btn btn-outline-danger btn-lg" title="Inicia sesión para guardar favoritos">
-                        <i class="bi bi-heart me-1"></i>Agregar a Favoritos
-                    </a>
-                @endauth
                 <a href="#specs" class="btn btn-outline-secondary btn-lg">Ver especificaciones</a>
             </div>
 
@@ -195,60 +180,6 @@
 
 @push('scripts')
 <script>
-// Función para toggle de favoritos
-function toggleFavorite(productSlug, button) {
-    // Verificar si hay token CSRF disponible
-    var csrfToken = document.querySelector('meta[name="csrf-token"]');
-    if (!csrfToken) {
-        console.error('CSRF token not found');
-        return;
-    }
-    
-    button.disabled = true;
-    
-    fetch(`/api/favorites/${productSlug}/toggle`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        if (response.status === 401) {
-            // No autenticado, redirigir a login
-            window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent(window.location.href);
-            return null;
-        }
-        return response.json();
-    })
-    .then(data => {
-        button.disabled = false;
-        if (data && data.success) {
-            const icon = button.querySelector('i');
-            const text = button.querySelector('span');
-            if (data.favorited) {
-                button.classList.remove('btn-outline-danger');
-                button.classList.add('btn-danger');
-                icon.className = 'bi bi-heart-fill';
-                if (text) text.textContent = 'En Favoritos';
-            } else {
-                button.classList.remove('btn-danger');
-                button.classList.add('btn-outline-danger');
-                icon.className = 'bi bi-heart';
-                if (text) text.textContent = 'Agregar a Favoritos';
-            }
-        } else if (data && data.message) {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        button.disabled = false;
-        console.error('Error:', error);
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function(){
     // Thumbnail buttons control the Bootstrap carousel and active state
     var carouselEl = document.getElementById('productCarousel');
